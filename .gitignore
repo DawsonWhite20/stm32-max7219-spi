@@ -1,0 +1,42 @@
+# STM32CubeIDE / CubeMX build output
+Debug/
+Release/
+build/
+cmake-build-*/
+
+# Object files / binaries
+*.o
+*.obj
+*.elf
+*.bin
+*.hex
+*.map
+*.list
+*.lst
+*.d
+*.su
+*.cyclo
+
+# STM32CubeIDE project metadata (keep .project/.cproject if you want IDE portability,
+# but these are usually safe to ignore)
+.metadata/
+.settings/
+*.launch
+
+# Keil / IAR (in case you switch toolchains later)
+*.uvprojx.bak
+*.uvoptx
+*.dep
+*.crf
+*Obj/
+*Listings/
+
+# VS Code
+.vscode/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

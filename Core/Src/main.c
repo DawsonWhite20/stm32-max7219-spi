@@ -26,6 +26,7 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
+extern SPI_HandleTypeDef hspi1;
 
 /* USER CODE END PTD */
 
@@ -51,12 +52,37 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_SPI1_Init(void);
 /* USER CODE BEGIN PFP */
+void MAX7219_Send(uint8_t address, uint8_t modifier);
+void MAX7219_Init(void);
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+void MAX7219_Send(uint8_t address, uint8_t modifier) {
+	// Shift address in as MSB and modifier as LSB
+	uint16_t data = (address << 8) | modifier;
 
+	// Reset the status of the MAX7219
+	HAL_GPIO_WritePin(CS_MAX7219_GPIO_Port, CS_MAX7219_Pin, GPIO_PIN_RESET);
+	// Pass in 16-bit data to MAX7219 (address and modifier)
+	HAL_SPI_Transmit(&hspi1, (uint8_t*)&data, 1, HAL_MAX_DELAY);
+	// Set status of the MAX7219
+	HAL_GPIO_WritePin(CS_MAX7219_GPIO_Port, CS_MAX7219_Pin, GPIO_PIN_SET);
+}
+
+void MAX7219_Init(void) {
+	MAX7219_Send(0x0C, 0x01); // Shutdown Register; 0x01 is normal operation
+	MAX7219_Send(0x0B, 0x07); // Scan Limit; Display all 8 rows
+	MAX7219_Send(0x09, 0x00); // Decode Mode; 0x00 is no decode
+	MAX7219_Send(0x0A, 0x0F); // Intensity; 0x0F is max brightness
+	MAX7219_Send(0x0F, 0x00); // Display Test; 0x00 is normal operation
+
+	// Clear all rows upon initialization
+	for (uint8_t row = 1; row <=8; row++) {
+		MAX7219_Send(row, 0x00);
+	}
+}
 /* USER CODE END 0 */
 
 /**
@@ -90,6 +116,10 @@ int main(void)
   MX_GPIO_Init();
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
+  MAX7219_Init();
+
+  // Row 1, column 1
+  MAX7219_Send(0x01, 0b10000000);
 
   /* USER CODE END 2 */
 

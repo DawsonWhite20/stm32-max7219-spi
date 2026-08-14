@@ -66,7 +66,13 @@ void MAX7219_Send(uint8_t address, uint8_t modifier) {
 	// Reset the status of the MAX7219
 	HAL_GPIO_WritePin(CS_MAX7219_GPIO_Port, CS_MAX7219_Pin, GPIO_PIN_RESET);
 	// Pass in 16-bit data to MAX7219 (address and modifier)
-	HAL_SPI_Transmit(&hspi1, (uint8_t*)&data, 1, HAL_MAX_DELAY);
+	HAL_StatusTypeDef status = HAL_SPI_Transmit(&hspi1, (uint8_t*)&data, 1, HAL_MAX_DELAY);
+	if (status != HAL_OK) {
+		while (1) {
+			HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+			HAL_Delay(200);
+		}
+	}
 	// Set status of the MAX7219
 	HAL_GPIO_WritePin(CS_MAX7219_GPIO_Port, CS_MAX7219_Pin, GPIO_PIN_SET);
 }
@@ -119,7 +125,7 @@ int main(void)
   MAX7219_Init();
 
   // Row 1, column 1
-  MAX7219_Send(0x01, 0b00000001);
+  MAX7219_Send(0x01, 0b01000000);
 
   /* USER CODE END 2 */
 

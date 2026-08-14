@@ -119,7 +119,7 @@ int main(void)
   MAX7219_Init();
 
   // Row 1, column 1
-  MAX7219_Send(0x01, 0b10000000);
+  MAX7219_Send(0x01, 0b00000001);
 
   /* USER CODE END 2 */
 

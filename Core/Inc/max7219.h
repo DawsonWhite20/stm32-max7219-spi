@@ -10,6 +10,12 @@
  */
 
 void MAX7219_Send(uint8_t address, uint8_t data);
+
+/**
+ * @brief Initializes the max7219 and clears all rows
+ *
+ */
+
 void MAX7219_Init(void);
 
 #endif

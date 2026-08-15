@@ -93,9 +93,15 @@ int main(void)
   /* USER CODE BEGIN 2 */
   MAX7219_Init();
 
-  // Row 1, column 1
-  MAX7219_Send(0x01, 0b01000000);
-
+  // Rows 1-8, section argument is how many columns are lit up in each respective row
+  MAX7219_Send(0x01, 0b01100000);
+  MAX7219_Send(0x02, 0b00011000);
+  MAX7219_Send(0x03, 0b00000100);
+  MAX7219_Send(0x04, 0b00000010);
+  MAX7219_Send(0x05, 0b00000001);
+  MAX7219_Send(0x06, 0b10000000);
+  MAX7219_Send(0x07, 0b01010101);
+  MAX7219_Send(0x08, 0b10101010);
   /* USER CODE END 2 */
 
   /* Infinite loop */

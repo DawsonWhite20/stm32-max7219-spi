@@ -18,6 +18,8 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "snake.h"
+#include "max7219.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -95,16 +97,7 @@ int main(void)
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
   MAX7219_Init();
-
-  // Rows 1-8, section argument is how many columns are lit up in each respective row
-  MAX7219_Send(0x01, 0b11111111);
-  MAX7219_Send(0x02, 0b11111111);
-  MAX7219_Send(0x03, 0b11111111);
-  MAX7219_Send(0x04, 0b11111111);
-  MAX7219_Send(0x05, 0b11111111);
-  MAX7219_Send(0x06, 0b11111111);
-  MAX7219_Send(0x07, 0b11111111);
-  MAX7219_Send(0x08, 0b11111111);
+  Snake_Init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -112,7 +105,12 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
+	  Snake_Update();
+	  Snake_Draw();
+	  HAL_Delay(400);
+	  if (Snake_IsGameOver()) {
+		  Snake_Init();
+	  }
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

@@ -50,3 +50,70 @@ void Snake_SetDirection(Direction dir) {
 uint8_t Snake_IsGameOver(void) {
 	return gameOver;
 }
+
+void Snake_Update(void) {
+	if (gameOver) return;
+
+	// Decide which direction to move on the matrix
+	int8_t dx = 0, dy = 0;
+	switch (direction) {
+	case DIR_UP: dy = -1; break;
+	case DIR_DOWN: dy = 1; break;
+	case DIR_LEFT: dx = -1; break;
+	case DIR_RIGHT: dx = 1; break;
+	}
+
+	// Position of the new head
+	// Signed integer in case of collision
+	int8_t newX = body[0].x + dx;
+	int8_t newY = body[0].y + dy;
+
+	// Collision check
+	if (newX < 0 || newX >= GRID_SIZE || newY < 0 || newY >= GRID_SIZE) {
+		gameOver = 1;
+		return;
+	}
+
+	for (uint8_t i = 0; i < length; i++) {
+		if (body[i].x == newX && body[i].y == newY) {
+			gameOver = 1;
+			return;
+		}
+	}
+
+	// Boolean to check if the new head eats the food
+	uint8_t ateFood = (newX == food.x && newY == food.y);
+
+	// Shift every part of the body ahead one block
+	for (uint8_t i = length; i > 0; i--) {
+		body[i] = body[i - 1];
+	}
+
+	body[0].x = newX;
+	body[0].y = newY;
+
+	// Grow the body if food was eaten
+	if (ateFood) {
+		if (length < MAX_LENGTH -1) {
+			length++;
+		}
+		PlaceFood();
+	}
+}
+
+void Snake_Draw(void) {
+	uint8_t rowData[GRID_SIZE] = {0};
+
+	// Draw the snake body
+	for (uint8_t i = 0; i < length; i++) {
+		rowData[body[i].y] |= columnBit[body[i].x];
+	}
+
+	// Draw the food bit
+	rowData[food.y] |= columnBit[food.x];
+
+	// Send data to max7219 to be drawn on matrix
+	for (uint8_t row = 0; row < GRID_SIZE; row++) {
+		MAX7219_Send(row + 1, rowData[row]);
+	}
+}

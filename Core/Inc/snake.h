@@ -7,7 +7,8 @@ typedef enum {
 	DIR_UP,
 	DIR_DOWN,
 	DIR_LEFT,
-	DIR_RIGHT
+	DIR_RIGHT,
+	DIR_NONE
 } Direction;
 
 void Snake_Init(void);

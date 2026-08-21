@@ -44,6 +44,12 @@ void Snake_Init(void) {
 }
 
 void Snake_SetDirection(Direction dir) {
+	// Check to see if snake is running into itself
+    if (dir == DIR_UP    && direction == DIR_DOWN)  return;
+    if (dir == DIR_DOWN  && direction == DIR_UP)    return;
+    if (dir == DIR_LEFT  && direction == DIR_RIGHT) return;
+    if (dir == DIR_RIGHT && direction == DIR_LEFT)  return;
+
 	direction = dir;
 }
 

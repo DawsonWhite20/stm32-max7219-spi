@@ -21,10 +21,10 @@ Direction Joystick_ReadDirection(void) {
 	uint32_t x = ADC_Read(ADC_CHANNEL_0);
 	uint32_t y = ADC_Read(ADC_CHANNEL_1);
 
-	if (x < 1500) return DIR_LEFT;
-	if (x > 2500) return DIR_RIGHT;
+	if (x < 1000 && y > 3000) return DIR_DOWN;
+	/*if (x > 2500) return DIR_RIGHT;
 	if (y < 1500) return DIR_UP;
-	if (y > 2500) return DIR_DOWN;
+	if (y > 2500) return DIR_DOWN; */
 
 	return DIR_NONE;
 }

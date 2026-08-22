@@ -112,7 +112,7 @@ int main(void)
 	  }
 	  Snake_Update();
 	  Snake_Draw();
-	  HAL_Delay(1000);
+	  HAL_Delay(500);
 	  if (Snake_IsGameOver()) {
 		  Snake_Init();
 	  }

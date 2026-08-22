@@ -20,6 +20,7 @@
 #include "main.h"
 #include "snake.h"
 #include "max7219.h"
+#include "joystick.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -105,9 +106,13 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+	  Direction input = Joystick_ReadDirection();
+	  if (input != DIR_NONE) {
+		  Snake_SetDirection(input);
+	  }
 	  Snake_Update();
 	  Snake_Draw();
-	  HAL_Delay(400);
+	  HAL_Delay(1000);
 	  if (Snake_IsGameOver()) {
 		  Snake_Init();
 	  }

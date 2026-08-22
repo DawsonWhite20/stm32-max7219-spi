@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "joystick.h"
 
 extern ADC_HandleTypeDef hadc1;
@@ -21,14 +22,21 @@ Direction Joystick_ReadDirection(void) {
 	uint32_t x = ADC_Read(ADC_CHANNEL_0);
 	uint32_t y = ADC_Read(ADC_CHANNEL_1);
 
-	if (x < 1000 && y > 3000) return DIR_DOWN;
-	/*if (x > 2500) return DIR_RIGHT;
-	if (y < 1500) return DIR_UP;
-	if (y > 2500) return DIR_DOWN; */
+    const int32_t center = 2048;
+    const int32_t deadzone = 600;
 
-	return DIR_NONE;
-}
+    int32_t dx = (int32_t)x - center;
+    int32_t dy = (int32_t)y - center;
 
-uint8_t Joystick_ButtonPressed(void) {
-	return (HAL_GPIO_ReadPin(SW_JOYSTICK_GPIO_Port, SW_JOYSTICK_Pin) == GPIO_PIN_RESET);
+    // Ignore small movements near center
+    if (abs(dx) < deadzone && abs(dy) < deadzone) {
+        return DIR_NONE;
+    }
+
+    // Whichever axis moved further from center is the configured direction
+    if (abs(dx) > abs(dy)) {
+        return (dx > 0) ? DIR_RIGHT : DIR_LEFT;
+    } else {
+        return (dy > 0) ? DIR_DOWN : DIR_UP;
+    }
 }
